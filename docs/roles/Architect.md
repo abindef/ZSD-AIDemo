@@ -199,26 +199,75 @@ trigger: manual
 - `InventoryVarianceProcessed`：盘点差异处理完成
 - `BankReconciled`：银企对账完成
 
+### 发布订阅PubSub主题命名规范
+
+#### 命名规则
+
+| 场景 | 格式 | 示例 |
+|------|------|------|
+| 发布者明确，订阅者不明确 | `[发布者AppId]-all-[事件]` | `pm-backend-all-projectcreated` |
+| 发布者不明确，订阅者明确 | `all-[订阅者AppId]-[意图]` | `all-finance-backend-pulling` |
+| 发布者明确，订阅者明确 | `[发布者AppId]-[订阅者AppId]-[事件/意图]` | `pm-backend-finance-backend-taskcreating` |
+| 发布者不明确，订阅者不明确 | 不支持 | - |
+
+**命名约定**：
+- 事件：名词 + 动词过去时（如 `projectcreated`、`ordersettled`）
+- 意图：名词 + 动词进行时（如 `datapulling`、`syncing`）
+- 层级关系：用 `-` 分隔（如 `dataexport-product-stockup-created`）
+
+#### 能力中心AppId速查
+
+| 能力中心 | Backend AppId | WebApi AppId |
+|----------|---------------|--------------|
+| 财务管理（本服务） | `finance-backend` | `finance-webapi` |
+| 项目管理 | `pm-backend` | `pm-webapi` |
+| 采购管理 | `purchase-backend` | `purchase-webapi` |
+| 销售管理 | `sell-backend` | `sell-webapi` |
+| 入库申请 | `sia-backend` | `sia-webapi` |
+| 出库申请 | `soa-backend` | `soa-webapi` |
+| 库存管理 | `inventory-backend` | `inventory-webapi` |
+| 物流管理 | `logistics-backend` | `logistics-webapi` |
+| 订货系统 | `ordering-backend` | `ordering-webapi` |
+| 首营中心 | `fm-backend` | `fm-webapi` |
+| 基础数据服务 | `bds-backend` | `bds-webapi` |
+| 集成中心 | `ic-backend` | `ic-webapi` |
+| 用户中心 | `uc-backend` | `uc-webapi` |
+| 权限中心 | `pc-backend` | `pc-webapi` |
+
+#### 财务服务相关主题示例
+
+| 主题名称 | 发布者 | 订阅者 | 说明 |
+|----------|--------|--------|------|
+| `purchase-backend-all-orderconfirmed` | 采购管理 | 财务等 | 采购订单确认 |
+| `sia-backend-all-goodsreceived` | 入库申请 | 财务等 | 货物入库完成 |
+| `soa-backend-all-goodsissued` | 出库申请 | 财务等 | 货物出库完成 |
+| `sell-backend-all-orderconfirmed` | 销售管理 | 财务等 | 销售订单确认 |
+| `inventory-backend-all-countcompleted` | 库存管理 | 财务等 | 盘点完成 |
+| `finance-backend-all-receivablesettled` | 财务管理 | 销售等 | 应收核销完成 |
+| `finance-backend-all-payablesettled` | 财务管理 | 采购等 | 应付核销完成 |
+
 ## 集成边界
 
 ### 上游依赖（消费）
 
-| 来源模块 | 事件/接口 | 用途 |
-|----------|-----------|------|
-| 采购管理 | `PurchaseOrderConfirmed` | 生成应付单 |
-| 入库申请 | `GoodsReceived` | 暂估应付入账 |
-| 出库申请 | `GoodsIssued` | 触发应收确认 |
-| 销管管理 | `SalesOrderConfirmed` | 生成应收单 |
-| 库存管理 | `InventoryCountCompleted` | 盘点差异财务处理 |
-| 首营管理 | 供应商/客户查询 | 往来单位信息 |
-| 物流管理 | `DeliveryConfirmed` | 物流费用应付 |
+| 来源模块 | AppId | 事件/接口 | 用途 |
+|----------|-------|-----------|------|
+| 采购管理 | `purchase-backend` | `purchase-backend-all-orderconfirmed` | 生成应付单 |
+| 入库申请 | `sia-backend` | `sia-backend-all-goodsreceived` | 暂估应付入账 |
+| 出库申请 | `soa-backend` | `soa-backend-all-goodsissued` | 触发应收确认 |
+| 销售管理 | `sell-backend` | `sell-backend-all-orderconfirmed` | 生成应收单 |
+| 库存管理 | `inventory-backend` | `inventory-backend-all-countcompleted` | 盘点差异财务处理 |
+| 首营中心 | `fm-webapi` | HTTP API | 供应商/客户查询 |
+| 物流管理 | `logistics-backend` | `logistics-backend-all-deliveryconfirmed` | 物流费用应付 |
 
 ### 下游提供（暴露）
 
-| 接口 | 消费方 | 说明 |
-|------|--------|------|
-| 应收余额查询 | 销管管理 | 客户信用额度校验 |
-| 应付余额查询 | 采购管理 | 供应商付款状态 |
-| 收款状态查询 | 订货系统 | 订单收款确认 |
-| 付款状态查询 | 采购管理 | 采购付款进度 |
-| 账龄分析 | 项目管理 | 项目应收应付分析 |
+| 接口/事件 | 消费方 | AppId | 说明 |
+|-----------|--------|-------|------|
+| 应收余额查询 | 销售管理 | `sell-backend` | 客户信用额度校验 |
+| 应付余额查询 | 采购管理 | `purchase-backend` | 供应商付款状态 |
+| 收款状态查询 | 订货系统 | `ordering-backend` | 订单收款确认 |
+| 付款状态查询 | 采购管理 | `purchase-backend` | 采购付款进度 |
+| 账龄分析 | 项目管理 | `pm-backend` | 项目应收应付分析 |
+| `finance-backend-all-receivablesettled` | 销售管理等 | - | 应收核销完成事件 |
+| `finance-backend-all-payablesettled` | 采购管理等 | - | 应付核销完成事件 |
