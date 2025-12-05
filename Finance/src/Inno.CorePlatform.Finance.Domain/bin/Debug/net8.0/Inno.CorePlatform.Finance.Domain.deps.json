@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Inno.CorePlatform.Finance.Domain/1.0.0": {
+        "runtime": {
+          "Inno.CorePlatform.Finance.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Inno.CorePlatform.Finance.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

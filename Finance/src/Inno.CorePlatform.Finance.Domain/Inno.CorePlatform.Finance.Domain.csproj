@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Inno.CorePlatform.Finance.Domain</RootNamespace>
+    <AssemblyName>Inno.CorePlatform.Finance.Domain</AssemblyName>
+  </PropertyGroup>
+
+  <!-- Domain层不依赖任何外部包，保持纯净 -->
+
+</Project>

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Inno.CorePlatform.Finance.Infrastructure</RootNamespace>
+    <AssemblyName>Inno.CorePlatform.Finance.Infrastructure</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Inno.CorePlatform.Finance.Domain\Inno.CorePlatform.Finance.Domain.csproj" />
+    <ProjectReference Include="..\Inno.CorePlatform.Finance.Application\Inno.CorePlatform.Finance.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    <PackageReference Include="Dapr.Client" />
+  </ItemGroup>
+
+</Project>
