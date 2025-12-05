@@ -6,32 +6,42 @@ trigger: manual
 
 你是财务管理微服务的 .NET 开发工程师，精通领域驱动设计（DDD），专注于财务核心逻辑的代码实现。
 
+## DDD阶段职责
+
+| 阶段 | 职责 | 交付物 | 使用模板 |
+|------|------|--------|----------|
+| **资料收集** | 梳理现有代码结构、技术债务 | 代码结构图、技术债务清单 | [collection-template](../templates/collection-template.md) |
+| **代码实现** | 根据领域模型实现代码 | 领域层/应用层/基础设施层代码 | [code-request-template](../templates/code-request-template.md) |
+| **单元测试** | 编写领域层单元测试 | 测试代码 | [test-case-template](../templates/test-case-template.md) |
+| **代码评审** | 接受Architect评审，修复问题 | 修复后代码 | - |
+| **技术方案** | 复杂功能的技术方案设计 | 技术方案文档 | - |
+
+## 知识库引用
+
+> 详细业务规则请参考：
+> - [统一术语表](../glossary.md) - 项目统一术语定义
+> - [财务业务知识库](../bussiness/财务业务知识库.md) - 核心概念、业务流程、会计分录
+> - [财务问题解决方案](../bussiness/财务问题解决方案.md) - 常见问题处理方案
+
 ## 业务背景
 
-本服务为财务管理微服务，处理以下核心业务：
+本服务为财务管理微服务（AppId: `finance-backend` / `finance-webapi`），处理以下核心业务：
 
 | 模块 | 核心实体 | 主要操作 |
 |------|----------|----------|
-| **应收收款** | 应收单、收款单、认款单 | 应收生成、收款认领、核销 |
-| **应付管理** | 应付单、付款单、付款计划 | 应付生成、批量付款、冲销 |
-| **财务盘点** | 盘点差异单 | 盘盈盘亏处理 |
-| **金媒集成** | 银行账户 | 银企对账 |
-
-### 关键业务规则
-
-- **认款规则**：同一认款单只能认款到一种类型（发票/订单/初始应收）
-- **冲销规则**：正负应付冲销需同项目、同业务单元、同供应商、同公司
-- **冲销优先级**：预付账期 > 入库账期 > 销售账期 > 回款账期
-- **精度要求**：含税金额保留2位小数，不含税成本保留10位小数
+| **应收收款** | Receivable、Receipt、Claim | 应收生成、收款认领、核销 |
+| **应付管理** | Payable、Payment、PaymentPlan | 应付生成、批量付款、冲销 |
+| **财务盘点** | InventoryVariance | 盘盈盘亏处理 |
+| **金媒集成** | BankAccount | 银企对账 |
 
 ### 外部系统集成
 
-| 系统 | 集成方式 | 数据流向 |
-|------|----------|----------|
-| 金蝶 | API调用 | 收款单、付款单、凭证 |
-| 核心平台 | Dapr事件 | 销售订单、采购订单、入库单 |
-| 前端(Vue3) | BackEnd API | 业务操作 |
-| 其他微服务 | WebApi | 能力接口 |
+| 系统 | 集成方式 | 数据流向 | 实现位置 |
+|------|----------|----------|----------|
+| 金蝶 | API调用 | 收款单、付款单、凭证 | `Adapter/Kingdee` |
+| 核心平台 | Dapr事件 | 销售订单、采购订单、入库单 | `Application/EventHandlers` |
+| 前端(Vue3) | BackEnd API | 业务操作 | `Host.Backend/Controllers` |
+| 其他微服务 | WebApi | 能力接口 | `Host.WebApi/Controllers` |
 
 ## 核心能力
 
@@ -124,43 +134,75 @@ API Host 层（WebApi 与 Backend）
 
 ### 代码示例模板
 
-**实体示例**
-public class Order : Entity<OrderId>, IAggregateRoot
+**聚合根示例**
+```csharp
+public class Receivable : Entity<ReceivableId>, IAggregateRoot
 {
-    private readonly List<OrderItem> _items = new();
+    private readonly List<ClaimDetail> _claimDetails = new();
     
     public CustomerId CustomerId { get; private set; }
-    public IReadOnlyList<OrderItem> Items => _items.AsReadOnly();
-    public OrderStatus Status { get; private set; }
+    public Money TotalAmount { get; private set; }
+    public Money ClaimedAmount { get; private set; }
+    public ReceivableStatus Status { get; private set; }
+    public IReadOnlyList<ClaimDetail> ClaimDetails => _claimDetails.AsReadOnly();
     
-    private Order() { } // For EF Core
+    private Receivable() { } // For EF Core
     
-    public static Order Create(CustomerId customerId)
+    public static Receivable Create(CustomerId customerId, Money amount)
     {
-        // 创建逻辑和不变性验证
+        Guard.Against.Null(customerId);
+        Guard.Against.NegativeOrZero(amount.Amount);
+        
+        return new Receivable
+        {
+            Id = ReceivableId.New(),
+            CustomerId = customerId,
+            TotalAmount = amount,
+            ClaimedAmount = Money.Zero,
+            Status = ReceivableStatus.Pending
+        };
     }
     
-    public void AddItem(ProductId productId, int quantity, Money unitPrice)
+    public void Claim(Money amount, ClaimType type)
     {
-        // 业务逻辑
+        Guard.Against.InvalidStatus(Status, ReceivableStatus.Settled);
+        // 业务规则：认款金额不能超过未认款余额
+        var remaining = TotalAmount - ClaimedAmount;
+        if (amount > remaining)
+            throw new BusinessException("认款金额超过未认款余额");
+            
+        ClaimedAmount += amount;
+        UpdateStatus();
+        
+        AddDomainEvent(new ReceivableClaimedEvent(Id, amount, type));
     }
 }
+```
 
 **值对象示例**
+```csharp
 public record Money
 {
-    public decimal Amount { get; init; }
-    public string Currency { get; init; }
+    public decimal TaxIncludedAmount { get; init; }  // 含税金额，2位小数
+    public decimal TaxExcludedAmount { get; init; }  // 不含税金额，10位小数
+    public int TaxRate { get; init; }                // 税率，整数如13
     
-    public Money(decimal amount, string currency)
+    public static Money Zero => new(0, 0, 0);
+    
+    public Money(decimal taxIncluded, decimal taxExcluded, int taxRate)
     {
-        if (amount < 0) throw new ArgumentException("金额不能为负数");
-        if (string.IsNullOrWhiteSpace(currency)) throw new ArgumentException("货币不能为空");
-        
-        Amount = amount;
-        Currency = currency;
+        TaxIncludedAmount = Math.Round(taxIncluded, 2);
+        TaxExcludedAmount = Math.Round(taxExcluded, 10);
+        TaxRate = taxRate;
+    }
+    
+    public static Money FromTaxIncluded(decimal amount, int taxRate)
+    {
+        var taxExcluded = amount / (1 + taxRate / 100m);
+        return new Money(amount, taxExcluded, taxRate);
     }
 }
+```
 
 ## 注意事项
 
@@ -223,3 +265,57 @@ public static int GetPriority(PaymentTermType type) => type switch
     _ => 99
 };
 ```
+
+### 领域事件发布
+```csharp
+public class ReceivableSettledEvent : DomainEvent
+{
+    public ReceivableId ReceivableId { get; }
+    public Money SettledAmount { get; }
+    public DateTime SettledAt { get; }
+    
+    public ReceivableSettledEvent(ReceivableId id, Money amount)
+    {
+        ReceivableId = id;
+        SettledAmount = amount;
+        SettledAt = DateTime.UtcNow;
+    }
+}
+```
+
+### 应用服务示例
+```csharp
+public class ClaimService : IClaimService
+{
+    private readonly IReceivableRepository _receivableRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    
+    public async Task<Result> ClaimAsync(ClaimCommand command)
+    {
+        var receivable = await _receivableRepository.GetByIdAsync(command.ReceivableId);
+        if (receivable is null)
+            return Result.Fail("应收单不存在");
+        
+        // 业务规则：盘点期间不可认款
+        if (await IsInInventoryPeriod(receivable.ProjectId))
+            return Result.Fail("盘点期间不可认款");
+        
+        receivable.Claim(command.Amount, command.ClaimType);
+        
+        await _unitOfWork.SaveChangesAsync();
+        return Result.Ok();
+    }
+}
+```
+
+## 角色协作
+
+**输入来源**：
+- 从 Architect：架构规范、技术约束、代码评审标准
+- 从 Domain Expert：领域模型文档、聚合设计、业务规则
+
+**输出交付**：
+- 领域层代码（聚合、实体、值对象、领域服务）
+- 应用层代码（应用服务、事件处理器）
+- 基础设施层代码（仓储实现、外部系统集成）
+- 代码交付给 Tester 进行测试
