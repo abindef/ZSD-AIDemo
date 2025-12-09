@@ -1,0 +1,13 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": ["vite.config.*", "vitest.config.*", "cypress.config.*", "playwright.config.*","plugins/*.*"],
+  "compilerOptions": {
+    "lib": ["esnext", "dom"],
+    "moduleResolution": "bundler",
+    "composite": true,
+    "types": ["node"],
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "noEmit": false
+  }
+}
