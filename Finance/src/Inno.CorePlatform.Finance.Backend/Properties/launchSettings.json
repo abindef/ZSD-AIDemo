@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Inno.CorePlatform.Finance.Backend": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:61801;http://localhost:61803"
+    }
+  }
+}
