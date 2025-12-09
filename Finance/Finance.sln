@@ -1,47 +1,29 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11222.16 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
-
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
 EndProject
-
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B2C3D4E5-F6A7-8901-BCDE-F12345678901}"
 EndProject
-
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inno.CorePlatform.Finance.Domain", "src\Inno.CorePlatform.Finance.Domain\Inno.CorePlatform.Finance.Domain.csproj", "{11111111-1111-1111-1111-111111111111}"
 EndProject
-
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inno.CorePlatform.Finance.Application", "src\Inno.CorePlatform.Finance.Application\Inno.CorePlatform.Finance.Application.csproj", "{22222222-2222-2222-2222-222222222222}"
 EndProject
-
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inno.CorePlatform.Finance.Infrastructure", "src\Inno.CorePlatform.Finance.Infrastructure\Inno.CorePlatform.Finance.Infrastructure.csproj", "{33333333-3333-3333-3333-333333333333}"
 EndProject
-
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inno.CorePlatform.Finance.Backend", "src\Inno.CorePlatform.Finance.Backend\Inno.CorePlatform.Finance.Backend.csproj", "{44444444-4444-4444-4444-444444444444}"
 EndProject
-
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inno.CorePlatform.Finance.WebApi", "src\Inno.CorePlatform.Finance.WebApi\Inno.CorePlatform.Finance.WebApi.csproj", "{55555555-5555-5555-5555-555555555555}"
 EndProject
-
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Inno.CorePlatform.Finance.Frondtend", "src\Inno.CorePlatform.Finance.Frondtend", "{99999999-9999-9999-9999-999999999999}"
-	ProjectSection(SolutionItems) = preProject
-		src\Inno.CorePlatform.Finance.Frondtend\package.json = src\Inno.CorePlatform.Finance.Frondtend\package.json
-		src\Inno.CorePlatform.Finance.Frondtend\vite.config.ts = src\Inno.CorePlatform.Finance.Frondtend\vite.config.ts
-		src\Inno.CorePlatform.Finance.Frondtend\tsconfig.json = src\Inno.CorePlatform.Finance.Frondtend\tsconfig.json
-	EndProjectSection
-EndProject
-
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inno.CorePlatform.Finance.Domain.Tests", "tests\Inno.CorePlatform.Finance.Domain.Tests\Inno.CorePlatform.Finance.Domain.Tests.csproj", "{66666666-6666-6666-6666-666666666666}"
 EndProject
-
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inno.CorePlatform.Finance.Application.Tests", "tests\Inno.CorePlatform.Finance.Application.Tests\Inno.CorePlatform.Finance.Application.Tests.csproj", "{77777777-7777-7777-7777-777777777777}"
 EndProject
-
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inno.CorePlatform.Finance.Integration.Tests", "tests\Inno.CorePlatform.Finance.Integration.Tests\Inno.CorePlatform.Finance.Integration.Tests.csproj", "{88888888-8888-8888-8888-888888888888}"
 EndProject
-
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "Inno.CorePlatform.Finance.Frondtend", "src\Inno.CorePlatform.Finance.Frondtend\Inno.CorePlatform.Finance.Frondtend.esproj", "{76D97E7B-0BF9-AC58-AA1D-4CBDC8EFC041}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +62,15 @@ Global
 		{88888888-8888-8888-8888-888888888888}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88888888-8888-8888-8888-888888888888}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88888888-8888-8888-8888-888888888888}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76D97E7B-0BF9-AC58-AA1D-4CBDC8EFC041}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76D97E7B-0BF9-AC58-AA1D-4CBDC8EFC041}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76D97E7B-0BF9-AC58-AA1D-4CBDC8EFC041}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{76D97E7B-0BF9-AC58-AA1D-4CBDC8EFC041}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76D97E7B-0BF9-AC58-AA1D-4CBDC8EFC041}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76D97E7B-0BF9-AC58-AA1D-4CBDC8EFC041}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{11111111-1111-1111-1111-111111111111} = {A1B2C3D4-E5F6-7890-ABCD-EF1234567890}
@@ -87,9 +78,12 @@ Global
 		{33333333-3333-3333-3333-333333333333} = {A1B2C3D4-E5F6-7890-ABCD-EF1234567890}
 		{44444444-4444-4444-4444-444444444444} = {A1B2C3D4-E5F6-7890-ABCD-EF1234567890}
 		{55555555-5555-5555-5555-555555555555} = {A1B2C3D4-E5F6-7890-ABCD-EF1234567890}
-		{99999999-9999-9999-9999-999999999999} = {A1B2C3D4-E5F6-7890-ABCD-EF1234567890}
 		{66666666-6666-6666-6666-666666666666} = {B2C3D4E5-F6A7-8901-BCDE-F12345678901}
 		{77777777-7777-7777-7777-777777777777} = {B2C3D4E5-F6A7-8901-BCDE-F12345678901}
 		{88888888-8888-8888-8888-888888888888} = {B2C3D4E5-F6A7-8901-BCDE-F12345678901}
+		{76D97E7B-0BF9-AC58-AA1D-4CBDC8EFC041} = {A1B2C3D4-E5F6-7890-ABCD-EF1234567890}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7D853403-0354-4496-8FFF-EA87D379BD01}
 	EndGlobalSection
 EndGlobal
