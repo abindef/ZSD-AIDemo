@@ -25,6 +25,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inno.CorePlatform.Finance.WebApi", "src\Inno.CorePlatform.Finance.WebApi\Inno.CorePlatform.Finance.WebApi.csproj", "{55555555-5555-5555-5555-555555555555}"
 EndProject
 
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Inno.CorePlatform.Finance.Frondtend", "src\Inno.CorePlatform.Finance.Frondtend", "{99999999-9999-9999-9999-999999999999}"
+	ProjectSection(SolutionItems) = preProject
+		src\Inno.CorePlatform.Finance.Frondtend\package.json = src\Inno.CorePlatform.Finance.Frondtend\package.json
+		src\Inno.CorePlatform.Finance.Frondtend\vite.config.ts = src\Inno.CorePlatform.Finance.Frondtend\vite.config.ts
+		src\Inno.CorePlatform.Finance.Frondtend\tsconfig.json = src\Inno.CorePlatform.Finance.Frondtend\tsconfig.json
+	EndProjectSection
+EndProject
+
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inno.CorePlatform.Finance.Domain.Tests", "tests\Inno.CorePlatform.Finance.Domain.Tests\Inno.CorePlatform.Finance.Domain.Tests.csproj", "{66666666-6666-6666-6666-666666666666}"
 EndProject
 
@@ -79,6 +87,7 @@ Global
 		{33333333-3333-3333-3333-333333333333} = {A1B2C3D4-E5F6-7890-ABCD-EF1234567890}
 		{44444444-4444-4444-4444-444444444444} = {A1B2C3D4-E5F6-7890-ABCD-EF1234567890}
 		{55555555-5555-5555-5555-555555555555} = {A1B2C3D4-E5F6-7890-ABCD-EF1234567890}
+		{99999999-9999-9999-9999-999999999999} = {A1B2C3D4-E5F6-7890-ABCD-EF1234567890}
 		{66666666-6666-6666-6666-666666666666} = {B2C3D4E5-F6A7-8901-BCDE-F12345678901}
 		{77777777-7777-7777-7777-777777777777} = {B2C3D4E5-F6A7-8901-BCDE-F12345678901}
 		{88888888-8888-8888-8888-888888888888} = {B2C3D4E5-F6A7-8901-BCDE-F12345678901}
