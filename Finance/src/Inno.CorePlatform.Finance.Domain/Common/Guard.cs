@@ -62,5 +62,19 @@ public static class Guard
                 throw new ArgumentOutOfRangeException(parameterName, $"Value must be between {min} and {max}.");
             return value;
         }
+
+        public static decimal NegativeOrZero(decimal value, string parameterName)
+        {
+            if (value <= 0)
+                throw new ArgumentOutOfRangeException(parameterName, "Value must be greater than zero.");
+            return value;
+        }
+
+        public static int NegativeOrZero(int value, string parameterName)
+        {
+            if (value <= 0)
+                throw new ArgumentOutOfRangeException(parameterName, "Value must be greater than zero.");
+            return value;
+        }
     }
 }
