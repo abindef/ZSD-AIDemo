@@ -17,7 +17,8 @@
           <inno-split-pane split="vertical" :default-percent="60" :min-percent="20">
             <!--左边：表格区域，占宽度 60%-->
             <template #paneL>
-              <inno-crud-operation :crud="crud1" :hiddenColumns="[]" border hidden-opts-right rightAdjust>
+              <inno-crud-operation :crud="crud1" :permission="crudPermission" :hiddenColumns="[]" border
+                hidden-opts-right rightAdjust>
                 <template #opts-left>
                   <el-tabs v-model="crud1.query.status" @click="tabActiveClick">
                     <el-tab-pane :label="`待提交(${statusTabCount.waitSubmitCount})`" name="0" />
@@ -97,6 +98,10 @@
         </template>
       </inno-split-pane>
     </div>
+
+    <!-- CrudDialog Component -->
+    <CrudDialog v-model:visible="dialogVisible" :is-edit="dialogIsEdit" :data="dialogData"
+      @success="handleDialogSuccess" />
   </div>
 </template>
 
@@ -116,6 +121,7 @@ import CRUD, { tableDrag } from '@inno/inno-mc-vue3/lib/crud';
 import { dateFormat } from '@inno/inno-mc-vue3/lib/utils/filters';
 import service from '@/utils/request';
 import { useRouter, useRoute } from 'vue-router';
+import CrudDialog from './components/CrudDialog.vue';
 
 const route = useRoute();
 onActivated(() => {
@@ -123,6 +129,12 @@ onActivated(() => {
     crud1.toQuery();
   }
 });
+// Dialog visibility control
+const dialogVisible = ref(false);
+const dialogIsEdit = ref(false);
+const dialogData = ref<any>(null);
+const paymentList = ref<any[]>([]);
+
 //------------表格一
 const table1 = ref<InstanceType<typeof ElTable>>();
 //列表配置查询
@@ -155,10 +167,16 @@ const crud1 = CRUD(
     crudMethod: {
       del: (ids) => service.delete(`/v1.0/sell-backend/api/saleout/${ids}`),
       edit: (data) => {
-        return service.put(`/v1.0/sell-backend/api/saleout`, data);
+        dialogData.value = data;
+        dialogIsEdit.value = true;
+        dialogVisible.value = true;
+        return Promise.resolve();
       },
       add: (data) => {
-        return service.post(`/v1.0/sell-backend/api/saleout`, data);
+        dialogData.value = null;
+        dialogIsEdit.value = false;
+        dialogVisible.value = true;
+        return Promise.resolve();
       }
     },
     userNames: ['createdBy', 'updatedBy', 'disabledBy'],
@@ -176,13 +194,16 @@ const crud1 = CRUD(
     },
 
     hooks: {
-      // [CRUD.HOOK.afterToAdd]: (_crud) => {
-      //   createVisible.value = true;
-      // },
-      // [CRUD.HOOK.afterToEdit]: (_crud) => {
-      //   console.log("CRUD.HOOK.afterToEdit",_crud);
-      //   createVisible.value = true;
-      // }
+      [CRUD.HOOK.afterToAdd]: (_crud: any) => {
+        dialogData.value = null;
+        dialogIsEdit.value = false;
+        dialogVisible.value = true;
+      },
+      [CRUD.HOOK.afterToEdit]: (_crud: any) => {
+        dialogData.value = _crud.form;
+        dialogIsEdit.value = true;
+        dialogVisible.value = true;
+      }
     },
     resultKey: {
       list: 'list',
@@ -280,7 +301,18 @@ const queryList = computed(() => {
     },
   ]
 });
+//表格1权限配置
+const crudPermission = ref({
+  add: ['/paymentAuto/All'],
+  edit: ['/paymentAuto/All'],
+  del: ['/paymentAuto/All'],
+  download: ['/paymentAuto/All']
+});
 
+// Dialog success handler
+const handleDialogSuccess = () => {
+  crud1.toQuery();
+};
 
 //------------表格二（供应商信息）
 const table2 = ref<InstanceType<typeof ElTable>>();
