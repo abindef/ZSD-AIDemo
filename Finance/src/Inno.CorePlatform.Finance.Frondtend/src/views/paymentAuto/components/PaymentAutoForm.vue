@@ -14,13 +14,8 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="单据日期" prop="billDate">
-              <el-date-picker
-                v-model="form.billDate"
-                type="date"
-                placeholder="选择日期"
-                value-format="YYYY-MM-DD"
-                style="width: 100%"
-              />
+              <el-date-picker v-model="form.billDate" type="date" placeholder="选择日期" value-format="YYYY-MM-DD"
+                style="width: 100%" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -49,12 +44,7 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="备注">
-              <el-input
-                v-model="form.remark"
-                type="textarea"
-                :rows="2"
-                placeholder="请输入备注"
-              />
+              <el-input v-model="form.remark" type="textarea" :rows="2" placeholder="请输入备注" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -66,7 +56,9 @@
           <div class="card-header">
             <span>付款明细</span>
             <el-button type="primary" size="small" @click="addDetail">
-              <el-icon><Plus /></el-icon>
+              <el-icon>
+                <Plus />
+              </el-icon>
               添加明细
             </el-button>
           </div>
@@ -80,38 +72,20 @@
           </el-table-column>
           <el-table-column label="付款金额" min-width="150">
             <template #default="scope">
-              <el-input-number
-                v-model="scope.row.paymentAmount"
-                :precision="2"
-                :min="0.01"
-                placeholder="付款金额"
-                size="small"
-                style="width: 100%"
-              />
+              <el-input-number v-model="scope.row.paymentAmount" :precision="2" :min="0.01" placeholder="付款金额"
+                size="small" style="width: 100%" />
             </template>
           </el-table-column>
           <el-table-column label="付款时间" min-width="180">
             <template #default="scope">
-              <el-date-picker
-                v-model="scope.row.paymentTime"
-                type="datetime"
-                placeholder="付款时间"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                size="small"
-                style="width: 100%"
-              />
+              <el-date-picker v-model="scope.row.paymentTime" type="datetime" placeholder="付款时间"
+                value-format="YYYY-MM-DD HH:mm:ss" size="small" style="width: 100%" />
             </template>
           </el-table-column>
           <el-table-column label="折扣金额" min-width="150">
             <template #default="scope">
-              <el-input-number
-                v-model="scope.row.discountAmount"
-                :precision="2"
-                :min="0"
-                placeholder="折扣金额"
-                size="small"
-                style="width: 100%"
-              />
+              <el-input-number v-model="scope.row.discountAmount" :precision="2" :min="0" placeholder="折扣金额"
+                size="small" style="width: 100%" />
             </template>
           </el-table-column>
           <el-table-column label="操作" width="80" fixed="right">
@@ -134,7 +108,9 @@
           <div class="card-header">
             <span>供应商信息</span>
             <el-button type="primary" size="small" @click="addAgent">
-              <el-icon><Plus /></el-icon>
+              <el-icon>
+                <Plus />
+              </el-icon>
               添加供应商
             </el-button>
           </div>
@@ -209,7 +185,12 @@ import {
   CreatePaymentAutoRequest,
   UpdatePaymentAutoRequest
 } from '@/api/paymentAuto';
-
+const crudPermission = ref({
+  add: ['/paymentAuto/All'],
+  edit: ['/paymentAuto/All'],
+  del: ['/paymentAuto/All'],
+  download: ['/paymentAuto/All']
+});
 const props = defineProps({
   data: {
     type: Object as PropType<PaymentAutoItemDto | null>,

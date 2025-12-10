@@ -17,7 +17,8 @@
           <inno-split-pane split="vertical" :default-percent="60" :min-percent="20">
             <!-- 左边：主表格 -->
             <template #paneL>
-              <inno-crud-operation :crud="crud" :hiddenColumns="[]" border hidden-opts-right rightAdjust>
+              <inno-crud-operation :crud="crud" :permission="crudPermission" :hiddenColumns="[]" border
+                hidden-opts-right rightAdjust>
                 <template #opts-left>
                   <el-tabs v-model="crud.query.status" @tab-click="tabActiveClick">
                     <el-tab-pane :label="`待提交(${statusTabCount.waitSubmitCount})`" name="0" />
@@ -30,18 +31,10 @@
                 <template #right></template>
               </inno-crud-operation>
               <inno-table-container>
-                <el-table
-                  ref="tableRef"
-                  v-loading="crud.loading"
-                  highlight-current-row
-                  :header-cell-style="{ background: '#EBEEF5', color: '#909399' }"
-                  border
-                  :data="crud.data"
-                  stripe
-                  @selection-change="crud.selectionChangeHandler"
-                  @row-click="handleRowClick"
-                  @sort-change="crud.sortChange"
-                >
+                <el-table ref="tableRef" v-loading="crud.loading" highlight-current-row
+                  :header-cell-style="{ background: '#EBEEF5', color: '#909399' }" border :data="crud.data" stripe
+                  @selection-change="crud.selectionChangeHandler" @row-click="handleRowClick"
+                  @sort-change="crud.sortChange">
                   <el-table-column type="selection" fixed="left" width="55" />
                   <el-table-column property="code" label="批量付款单号" min-width="180" show-overflow-tooltip />
                   <el-table-column property="billDate" label="单据日期" min-width="130" show-overflow-tooltip>
@@ -152,21 +145,9 @@
     </div>
 
     <!-- 新增/编辑对话框 -->
-    <el-dialog
-      v-model="dialogVisible"
-      :title="dialogTitle"
-      width="80%"
-      :close-on-click-modal="false"
-      destroy-on-close
-    >
-      <payment-auto-form
-        v-if="dialogVisible"
-        ref="formRef"
-        :data="currentRow"
-        :is-edit="isEdit"
-        @success="handleFormSuccess"
-        @cancel="dialogVisible = false"
-      />
+    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="80%" :close-on-click-modal="false" destroy-on-close>
+      <payment-auto-form v-if="dialogVisible" ref="formRef" :data="currentRow" :is-edit="isEdit"
+        @success="handleFormSuccess" @cancel="dialogVisible = false" />
     </el-dialog>
   </div>
 </template>
@@ -189,7 +170,12 @@ import {
   PaymentAutoAgentDto
 } from '@/api/paymentAuto';
 import PaymentAutoForm from './components/PaymentAutoForm.vue';
-
+const crudPermission = ref({
+  add: ['/paymentAuto/All'],
+  edit: ['/paymentAuto/All'],
+  del: ['/paymentAuto/All'],
+  download: ['/paymentAuto/All']
+});
 const tableRef = ref<InstanceType<typeof ElTable>>();
 const formRef = ref();
 
@@ -235,7 +221,7 @@ const crud = CRUD(
       add: true,
       edit: true,
       del: true,
-      download: false,
+      download: true,
       reset: true
     },
     pageConfig: {

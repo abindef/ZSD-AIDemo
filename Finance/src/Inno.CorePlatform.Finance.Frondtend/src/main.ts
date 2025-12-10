@@ -4,6 +4,7 @@ import { routes as routesTemplate } from '@inno/inno-mc-vue3/template/router';
 import { routes } from './router';
 import './style/index.scss';
 
+window.USER_FUNCTION_URIS = ['/paymentAuto/All']
 // 启动应用
 run({
   appName: import.meta.env.VITE_APP_name,
