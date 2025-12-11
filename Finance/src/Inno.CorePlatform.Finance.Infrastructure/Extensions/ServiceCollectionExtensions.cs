@@ -1,6 +1,5 @@
 using Inno.CorePlatform.Finance.Domain.Repositories;
 using Inno.CorePlatform.Finance.Infrastructure.Persistence;
-using Inno.CorePlatform.Finance.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

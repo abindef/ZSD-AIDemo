@@ -1,4 +1,3 @@
-using Inno.CorePlatform.Finance.Domain.Aggregates.Receivables;
 using Inno.CorePlatform.Finance.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
