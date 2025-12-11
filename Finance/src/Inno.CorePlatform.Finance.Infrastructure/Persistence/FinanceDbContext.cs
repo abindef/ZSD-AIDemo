@@ -1,4 +1,3 @@
-using Inno.CorePlatform.Finance.Domain.Aggregates.Receivables;
 using Inno.CorePlatform.Finance.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +12,6 @@ public class FinanceDbContext : DbContext, IUnitOfWork
     {
     }
 
-    public DbSet<Receivable> Receivables => Set<Receivable>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

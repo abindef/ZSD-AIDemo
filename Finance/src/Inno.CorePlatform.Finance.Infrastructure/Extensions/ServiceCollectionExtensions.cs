@@ -1,6 +1,5 @@
 using Inno.CorePlatform.Finance.Domain.Repositories;
 using Inno.CorePlatform.Finance.Infrastructure.Persistence;
-using Inno.CorePlatform.Finance.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,8 +20,7 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<FinanceDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("Default")));
 
-        // 仓储
-        services.AddScoped<IReceivableRepository, ReceivableRepository>();
+        // 仓储       
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<FinanceDbContext>());
 
         return services;
