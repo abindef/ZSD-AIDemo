@@ -21,8 +21,7 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<FinanceDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("Default")));
 
-        // 仓储
-        services.AddScoped<IReceivableRepository, ReceivableRepository>();
+        // 仓储       
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<FinanceDbContext>());
 
         return services;

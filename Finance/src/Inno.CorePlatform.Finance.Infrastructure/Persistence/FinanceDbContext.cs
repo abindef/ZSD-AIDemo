@@ -13,7 +13,6 @@ public class FinanceDbContext : DbContext, IUnitOfWork
     {
     }
 
-    public DbSet<Receivable> Receivables => Set<Receivable>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
