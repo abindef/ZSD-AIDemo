@@ -7,14 +7,6 @@ export const routes: Array<RouteRecordRaw> = [
       name: '选项式列表'
     },
     component: () => import('@/views/crud/index.vue')
-  },
-  {
-    path: '/payment-auto',
-    name: 'paymentAuto',
-    meta: {
-      name: '批量付款管理'
-    },
-    component: () => import('@/views/paymentAuto/index.vue')
   }
 ].map((i) => {
   if (i.component instanceof Function) {
