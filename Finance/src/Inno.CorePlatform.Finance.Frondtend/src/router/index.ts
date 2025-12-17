@@ -9,7 +9,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/crud/index.vue')
   },
   {
-    path: '/payment-auto',
+    path: '/paymentAuto',
     name: 'paymentAuto',
     meta: {
       name: '批量付款管理'
